@@ -14,9 +14,9 @@ export class TvService {
 
   constructor(private http: HttpClient) {
     this.baseUrl = 'https://api.themoviedb.org/3/';
-    this.apiKey = 'dd4d819639705d332d531217b4f7c6b6';
-    this.language = 'en-US';
-    this.region = 'US';
+    this.apiKey = '51c3cdc9639eb5399a80ffe55c09b463';
+    this.language = 'es-ES';
+    this.region = 'ES';
   }
 
   getTvOnTheAir(page: number): Observable<any> {

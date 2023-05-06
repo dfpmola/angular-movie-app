@@ -15,6 +15,9 @@
         <li class="nav-item">
             <a class="nav-link" [routerLink]="['/genres']" routerLinkActive="router-link-active">Genres</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/personal']" routerLinkActive="router-link-active">Personal</a>
+        </li>
     </ul>
     <span class="sidebar-nav-btn"  pButton icon="pi pi-plus" label="Show" (click)="leftSidebar = true"><img src="assets/images/menu.svg"></span>
 </nav>
@@ -39,6 +42,10 @@
             <div class="sidebarMenu genre_">
                 <img src="assets/images/tripod.svg">
                 <a class="sidebar-nav-link" [routerLink]="['/genres']" routerLinkActive="router-link-active">Genres</a>
+            </div>
+            <div class="sidebarMenu genre_">
+                <img src="assets/images/tripod.svg">
+                <a class="sidebar-nav-link" [routerLink]="['/personal']" routerLinkActive="router-link-active">Personal</a>
             </div>
         </div>
     </div>

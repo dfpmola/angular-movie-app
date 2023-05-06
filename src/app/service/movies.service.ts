@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,9 @@ export class MoviesService {
 
   constructor(private http: HttpClient) {
     this.baseUrl = 'https://api.themoviedb.org/3/';
-    this.apiKey = 'dd4d819639705d332d531217b4f7c6b6';
-    this.language = 'en-US';
-    this.region = 'US';
+    this.apiKey = '51c3cdc9639eb5399a80ffe55c09b463';
+    this.language = 'es-ES';
+    this.region = 'ES';
   }
 
   getNowPlaying(page: number): Observable<any> {
@@ -24,7 +24,7 @@ export class MoviesService {
   }
 
   searchMovies(searchStr: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}search/movie?api_key=${this.apiKey}&query=${searchStr}`);
+    return this.http.get(`${this.baseUrl}search/movie?api_key=${this.apiKey}&query=${searchStr}&language=${this.language}`);
   }
 
   getPopular(page: number): Observable<any> {
@@ -55,7 +55,7 @@ export class MoviesService {
   }
 
   getMovie(id: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}movie/${id}?api_key=${this.apiKey}`);
+    return this.http.get(`${this.baseUrl}movie/${id}?api_key=${this.apiKey}&language=${this.language}`);
   }
 
   getMovieReviews(id: string): Observable<any> {
@@ -88,6 +88,49 @@ export class MoviesService {
 
   getPersonCast(id: string): Observable<any> {
     return this.http.get(`${this.baseUrl}person/${id}/movie_credits?api_key=${this.apiKey}`);
+  }
+
+  isRegisteredInPersonal(id: string): Observable<any> {
+    return this.http.get(`http://localhost:3000/managment/movie/${id}`);
+  }
+  saveMovieInPersonal(id: string,nombre:string,data:string) {
+    let body = new URLSearchParams();
+    body.set('id', id);
+    body.set('name', nombre);
+    body.set('data', data);
+
+
+  let options = {
+      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+  };
+   return this.http.post('http://localhost:3000/managment/movie', body.toString(), options);
+  }
+
+  searchInAmule(name: string) {
+    let body = new URLSearchParams();
+    body.set('nombre', name);
+
+  let options = {
+      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
+      withCredentials: true
+  };
+   return this.http.post('http://localhost:3000/amule/search', body.toString(), options);
+  }
+  getAllInPersonal(): Observable<any> {
+    return this.http.get(`http://localhost:3000/managment`);
+  }
+  
+  getCookies(): Observable<any> {
+    let options = {
+      withCredentials: true
+  };
+    return this.http.get(`http://localhost:3000/amule`,{withCredentials: true });
+  }
+  getSearchResultsAmule(): Observable<any> {
+    let options = {
+      withCredentials: true
+  };
+    return this.http.get(`http://localhost:3000/amule/search`,{withCredentials: true });
   }
 
 }

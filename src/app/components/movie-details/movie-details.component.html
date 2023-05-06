@@ -30,6 +30,11 @@
                 <span class="mr-2"><img src="assets/images/play.svg"></span>
                 <span class="txt">Watch Trailer</span>
             </button>
+            <br><br>
+            <button [disabled]="isInPersonal" type="button" class="button button--icon trailer" (click)="registrarEnPersonal()">
+                <span class="mr-2"><img src="assets/images/play.svg"></span>
+                <span class="txt">REGISTRAR</span>
+            </button>
         </div>
     </div>
 </div>
@@ -173,6 +178,24 @@
                             <div class="item backdrop_" *ngFor="let backdrop of backdrops | slice: 1:17">
                                 <div class="image">
                                     <img class="lazyload" src="https://image.tmdb.org/t/p/w533_and_h300_bestv2/{{ backdrop?.file_path }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab *ngIf="isInPersonal"  label="Buscar">
+                    <div class="listing-space backdrop_">
+                        <div class="head">
+                            <h2 class="title">Elementos</h2>
+                        </div>
+                        <button type="button" class="button button--icon" (click)="buscarEnAmule()">
+                            <span class="mr-2"><img src="assets/images/play.svg"></span>
+                            <span class="txt">Buscar</span>
+                        </button>
+                        <div class="items">
+                            <div class="item backdrop_" *ngFor="let resultado of resultadoDeBusquedaAmule">
+                                <div class="image">
+                                    <h3>{{resultado['nombre']}}</h3>
                                 </div>
                             </div>
                         </div>

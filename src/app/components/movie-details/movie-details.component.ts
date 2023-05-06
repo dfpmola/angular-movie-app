@@ -4,6 +4,7 @@ import { ActivatedRoute , Params} from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material';
 import { AppMovieDialogComponent } from '../movie-details/app-movie-dialog/app-movie-dialog.component';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-movie-details',
@@ -21,8 +22,10 @@ export class MovieDetailsComponent implements OnInit {
   backdrops: any = [];
   recomendMovies: any = [];
   responsiveOptions;
-
-
+  isInPersonal:boolean = true;
+  retriveResultsCount = 0;
+  subscription: Subscription;
+  resultadoDeBusquedaAmule:[]=[];
   constructor(
     private movieService: MoviesService,
     private router: ActivatedRoute,
@@ -51,17 +54,48 @@ export class MovieDetailsComponent implements OnInit {
   ngOnInit() {
     this.router.params.subscribe((params: Params) => {
       this.id = params['id'];
+      this.getCookies();
       this.getSingleMoviesVideos(this.id);
       this.getSingleMoviesDetails(this.id);
       this.getCast(this.id);
       this.getBackropsImages(this.id);
       this.getRecomendMovie(this.id);
+      this.isregistrarEnPersonal(this.id);
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+  getCookies(){
+    this.movieService.getCookies().subscribe((res:any)=>{
+      console.log(res)
+    });
+  }
+
+  buscarEnAmule():void{
+    this.movieService.searchInAmule(this.movie.title).subscribe((res:any)=>{
+      console.log(res)
+      const source = interval(10000);
+      this.subscription = source.subscribe(val => this.recuperarResultadosEnAmule());
+
+    });
+  }
+  recuperarResultadosEnAmule():any{
+    this.movieService.getSearchResultsAmule().subscribe((res:any)=>{
+      this.retriveResultsCount+=1;
+      if(this.retriveResultsCount>=5){
+        this.subscription.unsubscribe();
+      }
+      console.log(res);
+      this.resultadoDeBusquedaAmule=res;
     });
   }
 
   getSingleMoviesDetails(id){
     this.movieService.getMovie(id).subscribe((res: any) => {
       this.movie = res;
+      console.log(this.movie);
     });
   }
 
@@ -82,6 +116,24 @@ export class MovieDetailsComponent implements OnInit {
       data: { video: this.video}
     });
   }
+
+  isregistrarEnPersonal(id): void {
+    this.movieService.isRegisteredInPersonal(id).subscribe((res: any) => {
+      if(res.result == "Movie not found"){
+        this.isInPersonal = false;
+      }
+    });;
+  }
+  registrarEnPersonal(): void {
+    this.movieService.saveMovieInPersonal(this.movie.id,this.movie.title,JSON.stringify(this.movie)).subscribe((res: any) => {
+      console.log(res);
+      console.log(res.status);
+      if(res.result != "Error"){
+        this.isInPersonal = true;
+      }
+    });;
+  }
+
   
   getCast(id) {
     this.movieService.getMovieCredits(id).subscribe((res: any) => {

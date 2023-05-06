@@ -46,13 +46,16 @@ const routes: Routes = [
     path: 'genres-tv/:id/:name',
     loadChildren: () => import('./components/tv-genre/tv-genre.module').then(m => m.TvGenreModule)
   },
+  {
+    path: 'personal',
+    loadChildren: () => import('./components/personal/personal.module').then(mod => mod.PersonalModule)
+  },
 
   {
     path: '**',
     redirectTo: ''
   },
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
